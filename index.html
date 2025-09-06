@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zayn Piggy - Digital Experience Architect</title>
+    <meta name="description" content="Zayn Piggy - A Digital Experience Architect crafting immersive journeys where technology meets artistry.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✨%3C/text%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-space-blue: #0A0E27;
+            --electric-cyan: #00D4FF;
+            --neon-purple: #8B5CF6;
+            --holographic-pink: #FF006E;
+            --soft-white: #FAFAFA;
+            --light-gray: #B4B4B4;
+            --dark-gray: #2A2A2A;
+            --transparent-white: rgba(255,255,255,0.1);
+            --transparent-white-light: rgba(255,255,255,0.05);
+
+            --text-primary: var(--soft-white);
+            --text-secondary: var(--light-gray);
+            --bg-primary: var(--deep-space-blue);
+            --bg-card: var(--dark-gray);
+
+            --font-header: 'Orbitron', sans-serif;
+            --font-body: 'Poppins', sans-serif;
+            --font-accent: 'Fira Code', monospace;
+
+            --gradient-aurora: linear-gradient(90deg, var(--electric-cyan), var(--neon-purple), var(--holographic-pink));
+            --gradient-depth: linear-gradient(180deg, var(--deep-space-blue) 0%, rgba(0,0,0,0.8) 100%);
+            --gradient-glow: linear-gradient(45deg, var(--soft-white), var(--electric-cyan));
+
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-medium: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Basic Resets & Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            cursor: none; /* Hide default cursor */
+        }
+
+        a {
+            color: var(--electric-cyan);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        a:hover {
+            color: var(--neon-purple);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-header);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 8px var(--electric-cyan), 0 0 16px var(--neon-purple);
+        }
+
+        h1 { font-size: 3.5rem; line-height: 1.1; }
+        h2 { font-size: 2.8rem; }
+        h3 { font-size: 2rem; }
+
+        section {
+            padding: 80px 5%;
+            position: relative;
+            z-index: 2; /* Above background canvas */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        section:nth-of-type(even) { background: linear-gradient(180deg, var(--deep-space-blue) 0%, rgba(0,0,0,0.4) 100%); }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--electric-cyan);
+            box-shadow: 0 0 10px var(--electric-cyan), 0 0 20px var(--neon-purple), 0 0 30px var(--holographic-pink);
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background 0.2s, box-shadow 0.2s;
+            mix-blend-mode: exclusion;
+        }
+        .custom-cursor.hover-target {
+            width: 40px;
+            height: 40px;
+            background: var(--neon-purple);
+            box-shadow: 0 0 15px var(--neon-purple), 0 0 30px var(--holographic-pink);
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--deep-space-blue);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-header);
+            font-size: 2rem;
+            z-index: 10000;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+        }
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loading-progress {
+            width: 150px;
+            height: 4px;
+            background: var(--transparent-white);
+            margin-top: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        .loading-progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-aurora);
+            transition: width 0.3s ease-out;
+        }
+        .loading-text {
+            margin-bottom: 10px;
+            color: var(--electric-cyan);
+        }
+
+        /* Background Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: var(--transparent-white);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        /* Neon Button Style */
+        .neon-button {
+            display: inline-block;
+            padding: 12px 30px;
+            border: 2px solid var(--electric-cyan);
+            border-radius: 5px;
+            background: transparent;
+            color: var(--electric-cyan);
+            font-family: var(--font-header);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: none; /* Handled by custom cursor */
+            transition: all var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px var(--electric-cyan);
+        }
+        .neon-button:hover {
+            color: var(--deep-space-blue);
+            background: var(--electric-cyan);
+            box-shadow: 0 0 20px var(--electric-cyan), 0 0 40px var(--neon-purple);
+            transform: translateY(-2px);
+        }
+        .neon-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-aurora);
+            transition: left var(--transition-medium);
+            z-index: 0;
+        }
+        .neon-button:hover::before {
+            left: 0;
+        }
+        .neon-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Floating Navigation Orbs */
+        #main-nav {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .nav-orb {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--transparent-white);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none; /* Handled by custom cursor */
+            transition: all var(--transition-medium);
+            position: relative;
+        }
+        .nav-orb:hover {
+            background: var(--electric-cyan);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--electric-cyan), 0 0 30px var(--neon-purple);
+        }
+        .nav-orb.active {
+            background: var(--neon-purple);
+            box-shadow: 0 0 15px var(--neon-purple), 0 0 30px var(--holographic-pink);
+            transform: scale(1.15);
+        }
+        .nav-orb i {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            transition: color var(--transition-fast);
+        }
+        .nav-orb:hover i, .nav-orb.active i {
+            color: var(--deep-space-blue);
+        }
+        .nav-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            background-color: var(--dark-gray);
+            color: var(--text-primary);
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px 10px;
+            position: absolute;
+            right: 60px;
+            white-space: nowrap;
+            z-index: 1;
+            transition: opacity 0.3s, visibility 0.3s;
+            font-size: 0.9rem;
+            font-family: var(--font-body);
+        }
+        .nav-orb:hover .nav-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        #hero {
+            position: relative;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 100px;
+            overflow: hidden;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at center, rgba(0,212,255,0.1) 0%, rgba(139,92,246,0.05) 50%, rgba(255,0,110,0.02) 100%);
+            z-index: -1;
+            animation: heroGradientPulse 15s infinite alternate;
+        }
+
+        @keyframes heroGradientPulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin-top: -50px; /* Adjust for avatar */
+            position: relative;
+            z-index: 2;
+        }
+        #hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            margin-bottom: 0.5rem;
+            background: var(--gradient-aurora);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none; /* Remove default text-shadow for gradient text */
+            margin-top: 20px;
+        }
+        .hero-typewriter-text {
+            font-size: clamp(1rem, 2.5vw, 1.8rem);
+            color: var(--electric-cyan);
+            min-height: 2em; /* Ensure space for text */
+            font-family: var(--font-accent);
+        }
+        .hero-tagline {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: var(--light-gray);
+            margin-top: 1rem;
+        }
+
+        .animated-avatar {
+            width: 150px;
+            height: 150px;
+            background: var(--transparent-white-light);
+            border: 2px solid var(--electric-cyan);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--neon-purple);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 20px var(--electric-cyan), 0 0 40px var(--neon-purple);
+            animation: avatarPulse 4s infinite ease-in-out;
+            transition: all var(--transition-medium);
+        }
+        .animated-avatar-inner {
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--neon-purple), var(--holographic-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--soft-white);
+            animation: avatarSpin 8s infinite linear reverse;
+            position: relative;
+            z-index: 1;
+        }
+        .animated-avatar::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(45deg,
+                rgba(255,255,255,0.05) 0px,
+                rgba(255,255,255,0.05) 1px,
+                transparent 1px,
+                transparent 5px
+            );
+            z-index: 0;
+            animation: avatarGridMove 20s infinite linear;
+        }
+        @keyframes avatarPulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px var(--electric-cyan), 0 0 40px var(--neon-purple); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px var(--electric-cyan), 0 0 60px var(--neon-purple), 0 0 90px var(--holographic-pink); }
+            100% { transform: scale(1); box-shadow: 0 0 20px var(--electric-cyan), 0 0 40px var(--neon-purple); }
+        }
+        @keyframes avatarSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes avatarGridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        /* Section Layout Common */
+        .section-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .section-content > h2 {
+            margin-bottom: 40px;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        .section-content > h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--gradient-aurora);
+            border-radius: 2px;
+        }
+        .text-center {
+            text-align: center;
+        }
+
+        /* About Section */
+        #about .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+            width: 100%;
+        }
+        #about .about-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            padding: 30px;
+            transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+            perspective: 1000px;
+        }
+        #about .about-card:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4), 0 0 20px var(--electric-cyan);
+        }
+        #about .about-card h3 {
+            color: var(--electric-cyan);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        #about .about-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        #about .about-card i {
+            font-size: 3rem;
+            color: var(--neon-purple);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+        .fun-facts {
+            margin-top: 60px;
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            background: var(--transparent-white-light);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+        .fun-facts h3 {
+            color: var(--holographic-pink);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .fun-facts ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .fun-facts li {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-family: var(--font-accent);
+            text-align: left;
+        }
+        .fun-facts li::before {
+            content: ">>";
+            color: var(--electric-cyan);
+            margin-right: 10px;
+        }
+
+        /* Skills Constellation */
+        #skills .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 60px;
+            margin-top: 40px;
+            position: relative;
+            padding: 50px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.1); /* To make lines visible */
+        }
+        #skills .skill-orb {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--transparent-white-light);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: none; /* Handled by custom cursor */
+            transition: all var(--transition-medium);
+            box-shadow: 0 0 10px var(--electric-cyan), inset 0 0 5px var(--electric-cyan);
+        }
+        #skills .skill-orb:hover {
+            transform: scale(1.1);
+            background: var(--electric-cyan);
+            color: var(--deep-space-blue);
+            box-shadow: 0 0 20px var(--electric-cyan), 0 0 40px var(--neon-purple);
+        }
+        #skills .skill-orb i {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            color: var(--neon-purple);
+            transition: color var(--transition-medium);
+        }
+        #skills .skill-orb:hover i {
+            color: var(--deep-space-blue);
+        }
+        #skills .skill-orb span {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color var(--transition-medium);
+        }
+        #skills .skill-orb:hover span {
+            color: var(--deep-space-blue);
+        }
+        .skill-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--transparent-white-light);
+            overflow: hidden;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+        }
+        .skill-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-aurora);
+            transition: width 1s ease-out;
+            animation: skillLoad 2s forwards ease-out; /* Add animation keyframe */
+            animation-play-state: paused;
+        }
+
+        @keyframes skillLoad {
+            0% { width: 0%; }
+            100% { width: var(--skill-level); }
+        }
+
+        /* Project Gallery */
+        #projects .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+            perspective: 1500px;
+        }
+        .project-card-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            cursor: none; /* Handled by custom cursor */
+            transition: transform var(--transition-medium);
+            transform-style: preserve-3d;
+        }
+        .project-card {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 15px;
+            position: relative;
+        }
+        .project-card.flipped {
+            transform: rotateY(180deg);
+        }
+        .project-card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: var(--transparent-white);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .project-card-front {
+            background: var(--transparent-white-light);
+        }
+        .project-card-back {
+            transform: rotateY(180deg);
+            background: var(--transparent-white);
+        }
+        .project-card-front h3 {
+            color: var(--electric-cyan);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--electric-cyan);
+        }
+        .project-card-front p {
+            color: var(--light-gray);
+            font-size: 1.1rem;
+        }
+        .project-card-back p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        .project-card-back .neon-button {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Timeline Section */
+        #timeline {
+            overflow: hidden;
+            min-height: 120vh;
+        }
+        #timeline .timeline-container {
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            padding: 40px 0;
+        }
+        .timeline-line {
+            position: absolute;
+            width: 4px;
+            background: var(--gradient-aurora);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+            animation: drawLine 2s forwards ease-out;
+            animation-play-state: paused;
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 0%;
+            background: var(--bg-primary); /* Hide line initially */
+            animation: hideLine 2s forwards ease-out;
+        }
+        @keyframes drawLine {
+            0% { height: 0%; }
+            100% { height: 100%; }
+        }
+        @keyframes hideLine { /* This is to control the reveal of the gradient line */
+            0% { height: 100%; }
+            100% { height: 0%; }
+        }
+
+        .timeline-event {
+            position: relative;
+            padding: 20px 0;
+            width: 50%;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .timeline-event.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .timeline-event:nth-child(even) {
+            margin-left: 50%;
+            padding-left: 60px;
+            text-align: left;
+        }
+        .timeline-event:nth-child(odd) {
+            margin-right: 50%;
+            padding-right: 60px;
+            text-align: right;
+        }
+        .timeline-event-content {
+            background: var(--transparent-white);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .timeline-event h3 {
+            color: var(--neon-purple);
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px var(--neon-purple);
+        }
+        .timeline-event p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .timeline-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--holographic-pink);
+            border: 3px solid var(--deep-space-blue);
+            z-index: 1;
+            top: calc(50% - 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--holographic-pink);
+            opacity: 0;
+            animation: markerPulse 2s infinite alternate, markerAppear 0.5s forwards ease-out;
+            animation-play-state: paused;
+        }
+        @keyframes markerPulse {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.1); }
+        }
+        @keyframes markerAppear {
+            0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
+        .timeline-event:nth-child(even) .timeline-marker { left: calc(50% - 10px - 60px + 4px); }
+        .timeline-event:nth-child(odd) .timeline-marker { left: calc(50% + 10px + 60px - 4px); }
+
+
+        /* Fake Data Dashboard */
+        #data-dashboard {
+            min-height: auto;
+            padding-bottom: 100px;
+        }
+        #data-dashboard .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            width: 100%;
+        }
+        .metric-card {
+            background: var(--transparent-white-light);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--electric-cyan) 0%, var(--neon-purple) 20%, transparent 70%);
+            opacity: 0.1;
+            animation: metricGlow 10s infinite alternate;
+        }
+        @keyframes metricGlow {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.2) rotate(360deg); }
+        }
+        .metric-card h3 {
+            color: var(--electric-cyan);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .metric-value {
+            font-family: var(--font-accent);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--neon-purple);
+            position: relative;
+            z-index: 1;
+        }
+        .metric-description {
+            color: var(--light-gray);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Tokenomics - The Unexpected Twist */
+        #tokenomics {
+            background: linear-gradient(180deg, var(--deep-space-blue) 0%, rgba(0,0,0,0.6) 100%);
+        }
+        #tokenomics .tokenomics-card {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 50px;
+            background: var(--transparent-white);
+            backdrop-filter: blur(12px);
+            border: 2px solid var(--holographic-pink);
+            border-radius: 20px;
+            box-shadow: 0 0 30px var(--holographic-pink), 0 0 60px var(--neon-purple);
+            position: relative;
+            animation: tokenomicsGlow 3s infinite alternate;
+        }
+        @keyframes tokenomicsGlow {
+            0% { box-shadow: 0 0 20px var(--holographic-pink), 0 0 40px var(--neon-purple); }
+            100% { box-shadow: 0 0 30px var(--holographic-pink), 0 0 60px var(--neon-purple); }
+        }
+        #tokenomics h2 {
+            color: var(--holographic-pink);
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px var(--holographic-pink);
+        }
+        #tokenomics .quote {
+            font-family: var(--font-header);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--electric-cyan);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--electric-cyan);
+            position: relative;
+            padding: 20px;
+            border-left: 5px solid var(--electric-cyan);
+        }
+        #tokenomics .quote::before {
+            content: "“";
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 4rem;
+            opacity: 0.2;
+            color: var(--electric-cyan);
+        }
+        #tokenomics .quote::after {
+            content: "”";
+            position: absolute;
+            bottom: -20px;
+            right: 0;
+            font-size: 4rem;
+            opacity: 0.2;
+            color: var(--electric-cyan);
+        }
+        #tokenomics p {
+            font-size: 1.1rem;
+            color: var(--light-gray);
+        }
+
+        /* Contact Section */
+        #contact .contact-form {
+            max-width: 600px;
+            width: 100%;
+            margin-top: 40px;
+            padding: 40px;
+            background: var(--transparent-white-light);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 15px;
+            text-align: left;
+        }
+        #contact .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        #contact .form-group label {
+            display: block;
+            color: var(--electric-cyan);
+            font-family: var(--font-accent);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        #contact .form-group input,
+        #contact .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        #contact .form-group input:focus,
+        #contact .form-group textarea:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 0 2px var(--neon-purple);
+        }
+        #contact .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .form-message-sent {
+            margin-top: 20px;
+            color: var(--holographic-pink);
+            font-family: var(--font-header);
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .form-message-sent.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Interactive Business Card Generator */
+        #business-card-generator {
+            min-height: auto;
+            padding-bottom: 100px;
+        }
+        #business-card-generator .card-generator-wrapper {
+            max-width: 700px;
+            width: 100%;
+            margin-top: 40px;
+            padding: 40px;
+            background: var(--transparent-white);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            text-align: center;
+        }
+        #business-card-generator .form-group label {
+            color: var(--electric-cyan);
+        }
+        #generated-card-preview {
+            margin-top: 40px;
+            border: 2px solid var(--electric-cyan);
+            border-radius: 10px;
+            padding: 30px;
+            background: var(--transparent-white-light);
+            text-align: left;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        #generated-card-preview.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #generated-card-preview h3 {
+            color: var(--neon-purple);
+            margin-bottom: 5px;
+        }
+        #generated-card-preview p {
+            color: var(--light-gray);
+            margin-bottom: 5px;
+        }
+        #generated-card-preview .card-logo {
+            font-size: 3rem;
+            color: var(--holographic-pink);
+            float: right;
+            margin-left: 20px;
+        }
+        #generated-card-preview .card-contact-info {
+            font-family: var(--font-accent);
+            font-size: 0.9rem;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(255,255,255,0.2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+        }
+        #generated-card-preview .card-contact-info span {
+            display: flex;
+            align-items: center;
+            color: var(--electric-cyan);
+        }
+        #generated-card-preview .card-contact-info span i {
+            margin-right: 8px;
+            color: var(--neon-purple);
+        }
+        .copy-card-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            font-size: 0.9rem;
+        }
+        .copy-card-message {
+            margin-top: 10px;
+            color: var(--electric-cyan);
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+        }
+        .copy-card-message.visible {
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, var(--deep-space-blue) 100%);
+            padding: 40px 5%;
+            text-align: center;
+            color: var(--light-gray);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 2;
+        }
+        .footer-social-links {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .footer-social-links a {
+            display: inline-block;
+            margin: 0 15px;
+            font-size: 1.8rem;
+            color: var(--electric-cyan);
+            transition: transform var(--transition-fast);
+        }
+        .footer-social-links a:hover {
+            color: var(--neon-purple);
+            transform: translateY(-3px) scale(1.1);
+        }
+        .footer-copyright {
+            margin-top: 20px;
+        }
+
+        /* Utility classes for animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal.fade-in {
+            transform: none;
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+        .reveal.fade-in.visible {
+            opacity: 1;
+        }
+
+        /* Voice Command Placeholder */
+        .voice-command-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 99;
+            background: var(--transparent-white);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+        .voice-command-hint i {
+            color: var(--holographic-pink);
+            font-size: 1.3rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            #main-nav {
+                top: auto;
+                bottom: 20px;
+                right: 50%;
+                transform: translateX(50%);
+                flex-direction: row;
+                gap: 10px;
+            }
+            .nav-tooltip {
+                display: none; /* Hide tooltips on mobile */
+            }
+            #skills .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            section { padding: 60px 5%; }
+            #hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); }
+            .hero-typewriter-text { font-size: clamp(0.9rem, 3vw, 1.3rem); }
+
+            #about .about-grid {
+                grid-template-columns: 1fr;
+            }
+            #skills .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            #skills .skill-orb {
+                width: 100px;
+                height: 100px;
+            }
+            .timeline-event:nth-child(even),
+            .timeline-event:nth-child(odd) {
+                width: 100%;
+                margin: 0;
+                padding: 20px 0;
+                text-align: left;
+            }
+            .timeline-marker {
+                left: 0;
+                transform: none;
+            }
+            .timeline-event:nth-child(even) .timeline-marker,
+            .timeline-event:nth-child(odd) .timeline-marker {
+                left: 0;
+                transform: translateX(0);
+                margin-left: -10px;
+            }
+            .timeline-event-content {
+                margin-left: 25px; /* Adjust for marker */
+            }
+            .timeline-line {
+                left: 0;
+                transform: none;
+            }
+            .metric-card h3 { font-size: 1.3rem; }
+            .metric-value { font-size: 2.5rem; }
+            .tokenomics-card {
+                padding: 30px;
+            }
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuMGFY4F+R/H/X2kX+l6yP0d7rK2y/W2l41/D0Y0Q2X4fQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-text">Loading Digital Experience...</div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar" style="width: 0%;"></div>
+        </div>
+        <div class="loading-percentage">0%</div>
+    </div>
+
+    <!-- Background Canvas for Particles -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Floating Navigation Orbs -->
+    <nav id="main-nav">
+        <a href="#hero" class="nav-orb active" data-target="hero">
+            <i class="fas fa-home"></i>
+            <span class="nav-tooltip">Home</span>
+        </a>
+        <a href="#about" class="nav-orb" data-target="about">
+            <i class="fas fa-user"></i>
+            <span class="nav-tooltip">About</span>
+        </a>
+        <a href="#skills" class="nav-orb" data-target="skills">
+            <i class="fas fa-brain"></i>
+            <span class="nav-tooltip">Skills</span>
+        </a>
+        <a href="#projects" class="nav-orb" data-target="projects">
+            <i class="fas fa-project-diagram"></i>
+            <span class="nav-tooltip">Projects</span>
+        </a>
+        <a href="#timeline" class="nav-orb" data-target="timeline">
+            <i class="fas fa-history"></i>
+            <span class="nav-tooltip">Journey</span>
+        </a>
+        <a href="#contact" class="nav-orb" data-target="contact">
+            <i class="fas fa-envelope"></i>
+            <span class="nav-tooltip">Contact</span>
+        </a>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero">
+            <div class="animated-avatar">
+                <div class="animated-avatar-inner">✨</div>
+            </div>
+            <div class="hero-content">
+                <h1>Zayn Piggy</h1>
+                <p class="hero-typewriter-text" data-text="Digital Experience Architect"></p>
+                <p class="hero-tagline">Crafting immersive journeys where technology meets artistry.</p>
+                <button class="neon-button" onclick="document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });">
+                    <span>Explore My Work</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="fade-in">
+            <div class="section-content">
+                <h2>About the Architect</h2>
+                <p class="text-secondary" style="max-width: 800px; margin-bottom: 40px;">
+                    As a Digital Experience Architect, I don't just build websites; I craft digital ecosystems that resonate deeply with users. My philosophy centers on bridging cutting-edge technology with profound human experiences, ensuring every interaction tells a compelling story and creates lasting emotional connections. I believe in a future where technology is intuitive, beautiful, and profoundly impactful.
+                </p>
+                <div class="about-grid">
+                    <div class="glass-card about-card reveal">
+                        <i class="fas fa-gem"></i>
+                        <h3>Visionary Design</h3>
+                        <p>Specializing in creating unique visual languages and interactive paradigms that push the boundaries of conventional UI/UX.</p>
+                    </div>
+                    <div class="glass-card about-card reveal" style="transition-delay: 0.1s;">
+                        <i class="fas fa-code"></i>
+                        <h3>Technical Craftsmanship</h3>
+                        <p>Bringing designs to life with robust, performance-optimized, and scalable frontend architecture, focusing on butter-smooth animations.</p>
+                    </div>
+                    <div class="glass-card about-card reveal" style="transition-delay: 0.2s;">
+                        <i class="fas fa-brain"></i>
+                        <h3>Human-Centric Strategy</h3>
+                        <p>Every pixel and interaction is designed with the user in mind, ensuring intuitive navigation and delightful discoveries.</p>
+                    </div>
+                </div>
+
+                <div class="fun-facts reveal">
+                    <h3>Behind the Architect: Fun Facts</h3>
+                    <ul>
+                        <li>My code is 90% caffeine, 10% magic, and 100% bug-free (on Tuesdays).</li>
+                        <li>Fluent in 5 programming languages and 3 alien dialects (mostly for debugging purposes).</li>
+                        <li>I once optimized a website so much, it loaded before the user even thought about clicking.</li>
+                        <li>My favorite design tool is a blank canvas and a cup of existential dread.</li>
+                        <li>I speak fluent Cat. (Meow = "Deploy immediately").</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Constellation -->
+        <section id="skills" class="fade-in">
+            <div class="section-content">
+                <h2>Skills Constellation</h2>
+                <p class="text-secondary" style="max-width: 800px; margin-bottom: 40px;">
+                    A universe of capabilities, each glowing with proficiency. Hover to see the energy within!
+                </p>
+                <div class="skills-grid">
+                    <div class="skill-orb reveal" data-skill-level="95%">
+                        <i class="fas fa-palette"></i>
+                        <span>UI/UX Design</span>
+                        <div class="skill-progress-bar"><div class="skill-progress-fill"></div></div>
+                    </div>
+                    <div class="skill-orb reveal" data-skill-level="90%" style="transition-delay: 0.1s;">
+                        <i class="fas fa-terminal"></i>
+                        <span>Frontend Dev</span>
+                        <div class="skill-progress-bar"><div class="skill-progress-fill"></div></div>
+                    </div>
+                    <div class="skill-orb reveal" data-skill-level="85%" style="transition-delay: 0.2s;">
+                        <i class="fas fa-cube"></i>
+                        <span>3D/Motion</span>
+                        <div class="skill-progress-bar"><div class="skill-progress-fill"></div></div>
+                    </div>
+                    <div class="skill-orb reveal" data-skill-level="80%" style="transition-delay: 0.3s;">
+                        <i class="fas fa-sitemap"></i>
+                        <span>System Arch.</span>
+                        <div class="skill-progress-bar"><div class="skill-progress-fill"></div></div>
+                    </div>
+                    <div class="skill-orb reveal" data-skill-level="75%" style="transition-delay: 0.4s;">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Creative Strategy</span>
+                        <div class="skill-progress-bar"><div class="skill-progress-fill"></div></div>
+                    </div>
+                    <div class="skill-orb reveal" data-skill-level="70%" style="transition-delay: 0.5s;">
+                        <i class="fas fa-microchip"></i>
+                        <span>AI Integration</span>
+                        <div class="skill-progress-bar"><div class="skill-progress-fill"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Gallery -->
+        <section id="projects" class="fade-in">
+            <div class="section-content">
+                <h2>Project Gallery</h2>
+                <p class="text-secondary" style="max-width: 800px; margin-bottom: 40px;">
+                    A glimpse into crafted digital realities. Hover and flip the holographic cards to reveal the details.
+                </p>
+                <div class="projects-grid">
+                    <div class="project-card-container reveal">
+                        <div class="project-card" data-project-id="1">
+                            <div class="project-card-face project-card-front">
+                                <h3>Neuralink UI Redesign</h3>
+                                <p>Revolutionizing brain-computer interface aesthetics.</p>
+                                <button class="neon-button"><span>Flip for Details</span></button>
+                            </div>
+                            <div class="project-card-face project-card-back">
+                                <h3>Neuralink UI Redesign</h3>
+                                <p>Designed an intuitive and responsive UI for next-gen neural interfaces, focusing on accessibility and seamless thought-to-action workflows. Achieved a 30% reduction in cognitive load for complex tasks.</p>
+                                <a href="#" target="_blank" class="neon-button" style="margin-top: 10px;"><span>View Case Study</span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card-container reveal" style="transition-delay: 0.1s;">
+                        <div class="project-card" data-project-id="2">
+                            <div class="project-card-face project-card-front">
+                                <h3>Holographic Retail Experience</h3>
+                                <p>Bringing virtual shopping to life with interactive 3D displays.</p>
+                                <button class="neon-button"><span>Flip for Details</span></button>
+                            </div>
+                            <div class="project-card-face project-card-back">
+                                <h3>Holographic Retail Experience</h3>
+                                <p>Conceptualized and prototyped a holographic retail platform that allows customers to interact with products in a 3D immersive environment, boosting engagement by 45% in pilot tests.</p>
+                                <a href="#" target="_blank" class="neon-button" style="margin-top: 10px;"><span>View Demo</span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card-container reveal" style="transition-delay: 0.2s;">
+                        <div class="project-card" data-project-id="3">
+                            <div class="project-card-face project-card-front">
+                                <h3>AI-Powered Learning Platform</h3>
+                                <p>Adaptive education with personalized digital pathways.</p>
+                                <button class="neon-button"><span>Flip for Details</span></button>
+                            </div>
+                            <div class="project-card-face project-card-back">
+                                <h3>AI-Powered Learning Platform</h3>
+                                <p>Architected the frontend for an intelligent learning platform leveraging AI for personalized content delivery and progress tracking, resulting in a 20% increase in student completion rates.</p>
+                                <a href="#" target="_blank" class="neon-button" style="margin-top: 10px;"><span>View Platform</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section id="timeline" class="fade-in">
+            <div class="section-content">
+                <h2>Journey of an Architect</h2>
+                <p class="text-secondary" style="max-width: 800px; margin-bottom: 40px;">
+                    An animated path showcasing key milestones and professional evolution.
+                </p>
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-event reveal">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-event-content glass-card">
+                            <h3>2015: Quantum Design Academy</h3>
+                            <p>Graduated with honors, specializing in advanced UI/UX principles and emerging technologies.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-event reveal">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-event-content glass-card">
+                            <h3>2017: First VR Experience Launched</h3>
+                            <p>Led design and development for an award-winning immersive VR training simulation.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-event reveal">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-event-content glass-card">
+                            <h3>2019: Pioneering XR Interfaces</h3>
+                            <p>Joined "HoloCorp" to lead R&D for next-generation extended reality interfaces.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-event reveal">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-event-content glass-card">
+                            <h3>2021: Led Innovation Lab</h3>
+                            <p>Headed "Synthetix Labs," developing a new framework for adaptive digital experiences.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-event reveal">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-event-content glass-card">
+                            <h3>2023: Independent Architect</h3>
+                            <p>Launched Zayn Piggy Studio, focusing on bespoke digital experience architecture for visionary clients.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fake Data Visualization Dashboard -->
+        <section id="data-dashboard" class="fade-in">
+            <div class="section-content">
+                <h2>Performance Overview (Simulated)</h2>
+                <p class="text-secondary" style="max-width: 800px; margin-bottom: 40px;">
+                    Visualizing the impact of meticulously crafted digital experiences. These metrics demonstrate the measurable success of human-centered design.
+                </p>
+                <div class="dashboard-grid">
+                    <div class="metric-card reveal">
+                        <h3>User Engagement Boost</h3>
+                        <p class="metric-value" data-final-value="25.7">+0%</p>
+                        <p class="metric-description">Average increase across all projects due to intuitive design.</p>
+                    </div>
+                    <div class="metric-card reveal" style="transition-delay: 0.1s;">
+                        <h3>Conversion Rate Optimization</h3>
+                        <p class="metric-value" data-final-value="18.5">0%</p>
+                        <p class="metric-description">Achieved through streamlined user flows and compelling CTAs.</p>
+                    </div>
+                    <div class="metric-card reveal" style="transition-delay: 0.2s;">
+                        <h3>Emotional Connection Score</h3>
+                        <p class="metric-value" data-final-value="9.2">0.0</p>
+                        <p class="metric-description">Rated by users for aesthetic appeal and perceived value.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tokenomics - The Unexpected Twist -->
+        <section id="tokenomics" class="fade-in">
+            <div class="section-content">
+                <div class="tokenomics-card reveal">
+                    <h2>Our Tokenomics (A Humorous Interlude)</h2>
+                    <p class="quote">
+                        Our tokenomics are simple: 100% Vibes, 0% Taxes. To the moon!
+                    </p>
+                    <p>
+                        While Zayn Piggy is focused on crafting stellar digital experiences, we understand the digital world has its own unique currencies. This section is a playful nod to the meme culture that fuels much of the innovation in Web3. Don't worry, your investments here are purely in visionary design and groundbreaking development!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="fade-in">
+            <div class="section-content">
+                <h2>Let's Build the Future</h2>
+                <p class="text-secondary" style="max-width: 800px; margin-bottom: 40px;">
+                    Ready to transform your vision into an unparalleled digital experience? Reach out and let's craft something extraordinary together.
+                </p>
+                <form class="contact-form glass-card reveal" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" name="email" required placeholder="john.doe@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" required placeholder="Tell me about your project..."></textarea>
+                    </div>
+                    <button type="submit" class="neon-button">
+                        <span>Send Message <i class="fas fa-paper-plane"></i></span>
+                    </button>
+                    <p class="form-message-sent" id="formMessageSent">Message sent! I'll be in touch soon.</p>
+                </form>
+            </div>
+        </section>
+
+        <!-- Interactive Business Card Generator -->
+        <section id="business-card-generator" class="fade-in">
+            <div class="section-content">
+                <h2>Your Digital Business Card</h2>
+                <p class="text-secondary" style="max-width: 800px; margin-bottom: 40px;">
+                    Create and download your custom digital business card featuring my contact information. A piece of the future, for your wallet.
+                </p>
+                <div class="card-generator-wrapper glass-card reveal">
+                    <div class="form-group">
+                        <label for="cardName">Your Name for the Card</label>
+                        <input type="text" id="cardName" name="cardName" placeholder="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="cardTitle">Your Title for the Card</label>
+                        <input type="text" id="cardTitle" name="cardTitle" placeholder="Your Title (e.g., CEO, Visionary)">
+                    </div>
+                    <button class="neon-button" id="generateCardBtn">
+                        <span>Generate My Card</span>
+                    </button>
+                    <div id="generated-card-preview">
+                        <i class="card-logo fas fa-layer-group"></i>
+                        <h3 id="previewCardName">Zayn Piggy</h3>
+                        <p id="previewCardTitle" style="color: var(--holographic-pink);">Digital Experience Architect</p>
+                        <div class="card-contact-info">
+                            <span><i class="fas fa-phone"></i> +1 (555) 123-4567</span>
+                            <span><i class="fas fa-envelope"></i> contact@zaynpiggy.com</span>
+                            <span><i class="fab fa-twitter"></i> <a href="https://x.com/zayntech_info" target="_blank" rel="noopener noreferrer">@zayntech_info</a></span>
+                            <span><i class="fas fa-globe"></i> zaynpiggy.com</span>
+                        </div>
+                        <button class="neon-button copy-card-btn" id="copyCardBtn">
+                            <span>Copy Card Info</span>
+                        </button>
+                        <p class="copy-card-message" id="copyCardMessage">Copied to clipboard!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-social-links">
+            <a href="https://x.com/zayntech_info" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <!-- Add other social links as needed -->
+        </div>
+        <p class="footer-copyright">© 2025 Zayn Piggy. All rights reserved.</p>
+    </footer>
+
+    <!-- Voice Command Hint -->
+    <div class="voice-command-hint">
+        <i class="fas fa-microphone"></i>
+        <span>Voice commands coming soon! Try "Show my projects".</span>
+    </div>
+
+    <!-- Audio elements for subtle sound effects -->
+    <audio id="hover-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-positive-notification-alert-1125.mp3" preload="auto"></audio>
+    <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-message-pop-alert-2354.mp3" preload="auto"></audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const progressBar = loadingScreen.querySelector('.loading-progress-bar');
+            const percentageText = loadingScreen.querySelector('.loading-percentage');
+            const sections = document.querySelectorAll('section');
+            const navOrbs = document.querySelectorAll('.nav-orb');
+            const customCursor = document.querySelector('.custom-cursor');
+            const hoverTargets = document.querySelectorAll('a, button, .nav-orb, .skill-orb, .project-card-container');
+            const hoverSound = document.getElementById('hover-sound');
+            const clickSound = document.getElementById('click-sound');
+
+            // --- Loading Screen ---
+            let loadProgress = 0;
+            const interval = setInterval(() => {
+                loadProgress += Math.floor(Math.random() * 10) + 5; // Simulate load
+                if (loadProgress > 100) loadProgress = 100;
+                progressBar.style.width = `${loadProgress}%`;
+                percentageText.textContent = `${loadProgress}%`;
+
+                if (loadProgress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        document.body.style.cursor = 'none'; // Ensure custom cursor is active
+                    }, 500); // Wait a bit before hiding
+                }
+            }, 100);
+
+            // --- Custom Cursor ---
+            document.addEventListener('mousemove', e => {
+                customCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            });
+
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => customCursor.classList.add('hover-target'));
+                target.addEventListener('mouseleave', () => customCursor.classList.remove('hover-target'));
+            });
+
+            // --- Sound Effects ---
+            const playSound = (audioElement) => {
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; // Respect reduced motion
+                audioElement.currentTime = 0; // Rewind to start
+                audioElement.volume = 0.2; // Keep it subtle
+                audioElement.play().catch(e => console.log("Audio play failed:", e)); // Catch promise rejection
+            };
+
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => playSound(hoverSound));
+            });
+            document.addEventListener('click', () => playSound(clickSound));
+
+
+            // --- Particle Canvas Background ---
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = window.innerWidth < 768 ? 50 : 100;
+            let mouse = { x: null, y: null, radius: 150 };
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+            });
+
+            window.addEventListener('mousemove', (event) => {
+                mouse.x = event.x;
+                mouse.y = event.y;
+            });
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            class Particle {
+                constructor(x, y, directionX, directionY, size, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.directionX = directionX;
+                    this.directionY = directionY;
+                    this.size = size;
+                    this.color = color;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+
+                update() {
+                    if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                    if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+
+                    this.x += this.directionX;
+                    this.y += this.directionY;
+                    this.draw();
+
+                    // Interaction with mouse
+                    if (mouse.x && mouse.y) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < mouse.radius + this.size) {
+                            if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
+                                this.x += 10;
+                            }
+                            if (mouse.x > this.x && this.x > this.size * 10) {
+                                this.x -= 10;
+                            }
+                            if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
+                                this.y += 10;
+                            }
+                            if (mouse.y > this.y && this.y > this.size * 10) {
+                                this.y -= 10;
+                            }
+                        }
+                    }
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    let size = (Math.random() * 5) + 1;
+                    let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                    let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                    let directionX = (Math.random() * 0.4) - 0.2; // -0.2 to 0.2
+                    let directionY = (Math.random() * 0.4) - 0.2;
+                    let colors = ['#00D4FF', '#8B5CF6', '#FF006E'];
+                    let color = colors[Math.floor(Math.random() * colors.length)];
+                    particles.push(new Particle(x, y, directionX, directionY, size, color));
+                }
+            }
+
+            function animateParticles() {
+                requestAnimationFrame(animateParticles);
+                ctx.clearRect(0, 0, innerWidth, innerHeight);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                }
+                connectParticles();
+            }
+
+            function connectParticles() {
+                let opacityValue = 1;
+                for (let a = 0; a < particles.length; a++) {
+                    for (let b = a; b < particles.length; b++) {
+                        let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x)) +
+                                       ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
+                        if (distance < (canvas.width / 7) * (canvas.height / 7)) { // Adjust connection distance based on screen size
+                            opacityValue = 1 - (distance / 20000); // Fades lines over distance
+                            ctx.strokeStyle = `rgba(0, 212, 255, ${opacityValue})`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[a].x, particles[a].y);
+                            ctx.lineTo(particles[b].x, particles[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            initParticles();
+            animateParticles();
+
+            // --- Typewriter Effect for Hero ---
+            const typewriterText = document.querySelector('.hero-typewriter-text');
+            const textToType = typewriterText.dataset.text;
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < textToType.length) {
+                    typewriterText.textContent += textToType.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeWriter, 100); // Typing speed
+                } else {
+                    typewriterText.classList.add('typing-complete'); // Optional class for styling post-typing
+                }
+            }
+            // Trigger typing after loading screen is gone
+            setTimeout(() => {
+                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    typeWriter();
+                } else {
+                    typewriterText.textContent = textToType; // Show full text if reduced motion
+                }
+            }, 1500); // Delay after loading screen animation starts
+
+
+            // --- Intersection Observer for Scroll Animations (Reveal, Skills, Timeline, Dashboard) ---
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Handle specific section animations here
+                        if (entry.target.id === 'skills') {
+                            const skillFills = entry.target.querySelectorAll('.skill-progress-fill');
+                            skillFills.forEach(fill => {
+                                fill.style.width = fill.parentElement.dataset.skillLevel;
+                                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                    fill.style.animationPlayState = 'running';
+                                }
+                            });
+                        }
+                        if (entry.target.id === 'timeline') {
+                            const timelineLine = entry.target.querySelector('.timeline-line');
+                            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                timelineLine.style.animationPlayState = 'running';
+                                timelineLine.style.setProperty('--line-height', '100%'); // For the line animation
+                            } else {
+                                timelineLine.style.height = '100%';
+                            }
+                            const timelineMarkers = entry.target.querySelectorAll('.timeline-marker');
+                            timelineMarkers.forEach(marker => {
+                                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                    marker.style.animationPlayState = 'running';
+                                } else {
+                                    marker.style.opacity = '1';
+                                    marker.style.transform = 'translateX(-50%) scale(1)';
+                                }
+                            });
+                        }
+                        if (entry.target.id === 'data-dashboard') {
+                            const metricValues = entry.target.querySelectorAll('.metric-value');
+                            metricValues.forEach(valueElement => {
+                                const finalValue = parseFloat(valueElement.dataset.finalValue);
+                                const isPercentage = valueElement.textContent.includes('%');
+                                const isDecimal = finalValue % 1 !== 0;
+                                let currentValue = 0;
+                                const duration = 1500; // ms
+                                const start = performance.now();
+
+                                function animateValue(timestamp) {
+                                    const elapsed = timestamp - start;
+                                    const progress = Math.min(elapsed / duration, 1);
+                                    let easedProgress = 0.5 - Math.cos(progress * Math.PI) / 2; // Ease-in-out
+
+                                    currentValue = finalValue * easedProgress;
+
+                                    if (isDecimal) {
+                                        valueElement.textContent = currentValue.toFixed(1) + (isPercentage ? '%' : '');
+                                    } else {
+                                        valueElement.textContent = Math.floor(currentValue) + (isPercentage ? '%' : '');
+                                    }
+
+                                    if (progress < 1) {
+                                        requestAnimationFrame(animateValue);
+                                    }
+                                }
+                                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                    requestAnimationFrame(animateValue);
+                                } else {
+                                    valueElement.textContent = finalValue + (isPercentage ? '%' : '');
+                                }
+                            });
+                        }
+                        observer.unobserve(entry.target); // Stop observing once visible
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal, .fade-in').forEach(el => {
+                sectionObserver.observe(el);
+            });
+
+            // --- Project Card 3D Flip ---
+            document.querySelectorAll('.project-card-container').forEach(container => {
+                const card = container.querySelector('.project-card');
+                const flipButton = container.querySelector('.project-card-front .neon-button');
+
+                // Using mouseenter/mouseleave for hover to flip
+                container.addEventListener('mouseenter', () => {
+                    if (!card.classList.contains('flipped')) {
+                        card.classList.add('flipped');
+                    }
+                });
+                container.addEventListener('mouseleave', () => {
+                    if (card.classList.contains('flipped')) {
+                        card.classList.remove('flipped');
+                    }
+                });
+
+                // Add click listener to button for touch devices / accessibility
+                if (flipButton) {
+                    flipButton.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent container's mouseenter/mouseleave from interfering
+                        card.classList.toggle('flipped');
+                    });
+                }
+            });
+
+            // --- Navigation Active State & Smooth Scroll ---
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.7 // Section is active when 70% visible
+            };
+
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navOrbs.forEach(orb => orb.classList.remove('active'));
+                        const currentActive = document.querySelector(`.nav-orb[data-target="${entry.target.id}"]`);
+                        if (currentActive) {
+                            currentActive.classList.add('active');
+                        }
+                    }
+                });
+            }, options);
+
+            sections.forEach(section => {
+                navObserver.observe(section);
+            });
+
+            navOrbs.forEach(orb => {
+                orb.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.dataset.target;
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+
+            // --- Contact Form Submission (Simulated) ---
+            const contactForm = document.getElementById('contactForm');
+            const formMessageSent = document.getElementById('formMessageSent');
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Simulate sending message
+                contactForm.reset();
+                formMessageSent.classList.add('visible');
+                setTimeout(() => {
+                    formMessageSent.classList.remove('visible');
+                }, 3000); // Message disappears after 3 seconds
+            });
+
+            // --- Business Card Generator ---
+            const generateCardBtn = document.getElementById('generateCardBtn');
+            const cardNameInput = document.getElementById('cardName');
+            const cardTitleInput = document.getElementById('cardTitle');
+            const previewCardName = document.getElementById('previewCardName');
+            const previewCardTitle = document.getElementById('previewCardTitle');
+            const generatedCardPreview = document.getElementById('generated-card-preview');
+            const copyCardBtn = document.getElementById('copyCardBtn');
+            const copyCardMessage = document.getElementById('copyCardMessage');
+
+            generateCardBtn.addEventListener('click', () => {
+                let name = cardNameInput.value.trim();
+                let title = cardTitleInput.value.trim();
+
+                previewCardName.textContent = name || 'Zayn Piggy';
+                previewCardTitle.textContent = title || 'Digital Experience Architect';
+                previewCardTitle.style.color = title ? 'var(--electric-cyan)' : 'var(--holographic-pink)';
+                generatedCardPreview.classList.add('visible');
+            });
+
+            copyCardBtn.addEventListener('click', () => {
+                const cardInfo = `Name: ${previewCardName.textContent}\nTitle: ${previewCardTitle.textContent}\nPhone: +1 (555) 123-4567\nEmail: contact@zaynpiggy.com\nTwitter: @zayntech_info\nWebsite: zaynpiggy.com`;
+                navigator.clipboard.writeText(cardInfo)
+                    .then(() => {
+                        copyCardMessage.classList.add('visible');
+                        setTimeout(() => {
+                            copyCardMessage.classList.remove('visible');
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text: ', err);
+                        alert('Failed to copy card info. Please copy manually.');
+                    });
+            });
+        });
+
+        // --- Reduced Motion Support ---
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.body.classList.add('reduced-motion');
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.classList.add('hidden'); // Hide immediately
+
+            document.querySelectorAll('.reveal, .fade-in').forEach(el => {
+                el.classList.add('visible'); // Show all elements immediately
+            });
+
+            // Stop canvas animation
+            const canvas = document.getElementById('particle-canvas');
+            if (canvas) canvas.style.display = 'none';
+
+            // Stop animated avatar
+            const avatar = document.querySelector('.animated-avatar');
+            if (avatar) avatar.style.animation = 'none';
+
+            // Disable all skill load animations
+            document.querySelectorAll('.skill-progress-fill').forEach(fill => {
+                fill.style.animation = 'none';
+                fill.style.width = fill.parentElement.dataset.skillLevel;
+            });
+
+            // Disable timeline animations
+            document.querySelectorAll('.timeline-line, .timeline-marker').forEach(el => {
+                el.style.animation = 'none';
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+            document.querySelector('.timeline-line').style.height = '100%';
+
+            // Disable metric value animation
+            document.querySelectorAll('.metric-value').forEach(valueElement => {
+                valueElement.textContent = valueElement.dataset.finalValue + (valueElement.textContent.includes('%') ? '%' : '');
+            });
+
+            // Typewriter effect becomes instant
+            const typewriterText = document.querySelector('.hero-typewriter-text');
+            if (typewriterText) typewriterText.textContent = typewriterText.dataset.text;
+
+            // Remove custom cursor if reduced motion is preferred
+            const customCursor = document.querySelector('.custom-cursor');
+            if (customCursor) customCursor.style.display = 'none';
+            document.body.style.cursor = 'default';
+        }
+    </script>
+</body>
+</html>
